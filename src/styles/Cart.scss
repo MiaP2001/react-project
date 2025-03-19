@@ -4,6 +4,11 @@
   gap: 15px;
   padding: 15px;
   border-bottom: 1px solid #ccc;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 
 .cart-item img {
@@ -11,6 +16,11 @@
   height: 80px;
   object-fit: cover;
   border-radius: 10px;
+
+  @media (max-width: 600px) {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 .remove-from-cart {
@@ -23,10 +33,14 @@
   font-size: 14px;
   margin-top: 5px;
   transition: background 0.3s;
-}
 
-.remove-from-cart:hover {
-  background: #cc0000;
+  &:hover {
+    background: #cc0000;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 }
 
 .place-order {
@@ -39,8 +53,12 @@
   font-size: 16px;
   margin-top: 20px;
   transition: background 0.3s;
-}
 
-.place-order:hover {
-  background: #218838;
+  &:hover {
+    background: #218838;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 }
