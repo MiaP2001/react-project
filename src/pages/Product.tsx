@@ -1,56 +1,91 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/Product.scss";
+
+export type iLanguage = "en" | "ru" | "pl" | "lt";
 
 interface Product {
   id: number;
   name: string;
   name_ru: string;
-  name_en: string;
   name_pl: string;
   name_lt: string;
+  name_en: string;
   price: number;
   image: string;
   description: string;
+  details: string;
 }
 
-const translations = {
-  ru: { details: "Подробнее", price: "Цена", addToCart: "Добавить в корзину" },
-  en: { details: "Details", price: "Price", addToCart: "Add to Cart" },
-  pl: { details: "Szczegóły", price: "Cena", addToCart: "Dodaj do koszyka" },
+interface TranslationWorld {
+  details: string;
+  price: string;
+  addToCart: string;
+}
+
+const translations: Record<iLanguage, TranslationWorld> = {
+  en: {
+    details: "Product details",
+    price: "Price",
+    addToCart: "Add to cart",
+  },
+  ru: {
+    details: "Детали продукта",
+    price: "Цена",
+    addToCart: "Добавить в корзину",
+  },
+  pl: {
+    details: "Szczegóły produktu",
+    price: "Cena",
+    addToCart: "Dodaj do koszyka",
+  },
   lt: { details: "Išsamiau", price: "Kaina", addToCart: "Pridėti į krepšelį" },
 };
 
-function Product() {
+interface ProductProps {
+  language: iLanguage;
+}
+
+const Product: React.FC<ProductProps> = ({ language }) => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
-  const [language] = useState<"ru" | "en" | "pl" | "lt">("ru");
 
   useEffect(() => {
-    console.log("ID:", id);
-    fetch(`http://localhost:3001/products?id=${id}`)
-      .then((response) => response.json())
-      .then((data) => setProduct(data[0]))
-      .catch((error) =>
-        console.error("Ошибка загрузки данных о продукте:", error)
-      );
+    fetch(`http://localhost:3001/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => setProduct(data))
+      .catch((error) => console.error(error));
   }, [id]);
 
   if (!product) {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
+  }
+
+  let productName;
+  switch (language) {
+    case "ru":
+      productName = product.name_ru;
+      break;
+    case "pl":
+      productName = product.name_pl;
+      break;
+    case "lt":
+      productName = product.name_lt;
+      break;
+    default:
+      productName = product.name_en;
   }
 
   return (
-    <div className="product-page">
+    <div>
       <img src={product.image} alt={product[`name_${language}`]} />
-      <h1>{product[`name_${language}` as keyof Product] || product.name_en}</h1>
+      <h1>{translations[language].details}</h1>
+      <p>{productName}</p>
       <p>
         {translations[language].price}: ${product.price}
       </p>
-      <p>{product.description}</p>
-      <button>{translations[language].addToCart}</button>
     </div>
   );
-}
+};
 
 export default Product;

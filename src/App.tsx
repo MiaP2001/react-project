@@ -230,7 +230,10 @@ function App() {
           }
         />
         <Route path="/orders" element={<Orders language={language} />} />
-        <Route path="/product/:id" element={<ProductPage />} />
+        <Route
+          path="/product/:id"
+          element={<ProductPage language={language} />}
+        />
       </Routes>
     </div>
   );
